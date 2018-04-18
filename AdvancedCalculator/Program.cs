@@ -10,6 +10,8 @@ namespace AdvancedCalculator
     {
         static void Main(string[] args)
         {
+            NewCalc newcalc = new NewCalc();
+            newcalc.Calculation = Console.ReadLine();
         }
     }
 }
