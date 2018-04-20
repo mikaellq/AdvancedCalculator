@@ -30,8 +30,9 @@ namespace AdvancedCalculator
         private void TestCalculation(string calculation)
         {
             List<string> list = new List<string>();
+            calculation = calculation.Replace(".", ",");
             // Regex matches letters and numbers and the rest and splits it into an array of strings? then removes white spaces
-            Regex regex = new Regex(@"[a-zA-Z]+|[\d.]+|[\W](?<!\s)");
+            Regex regex = new Regex(@"[a-zA-Z]+|[\d\,]+|[\W](?<!\s)");
             MatchCollection ms = regex.Matches(calculation);
             foreach (Match m in ms)
             {
@@ -47,45 +48,50 @@ namespace AdvancedCalculator
         {
             int i = 0;
             double r = 0;
-            char lastOp = ' ';
+            char lastOp = '+';
 
             do
             {
                 string s = list[i];
-                if (Regex.IsMatch(list[i], @"^[\d\.]+$"))
+                if (Regex.IsMatch(s, @"^[\d]+|[,]$"))
                 {
                     double n;
                     if (Double.TryParse(s, out n))
                     {
-
                         switch (lastOp)
                         {
                             case '+':
+                                result += n;
                                 break;
                             case '-':
+                                result -= n;
                                 break;
                             case '*':
+                                result *= n;
                                 break;
                             case '/':
+                                result /= n;
                                 break;
                             default:
                                 break;
                         }
-                        Console.WriteLine($"{list[i]} is Numerical");
                     }
+                    else
+                        Console.WriteLine($"{s} couldn't become a double!");
+                    Console.WriteLine($"{s} is Numerical, result = {result}");
                 }
-                else if (Regex.IsMatch(list[i], @"^\w+$"))
+                else if (Regex.IsMatch(s, @"^\w+$"))
                 {
-                    Console.WriteLine($"{list[i]} is letters");
+                    Console.WriteLine($"{s} is letters");
                 }
-                else if (Regex.IsMatch(list[i], @"^[\+\-\*\/]+$"))
+                else if (Regex.IsMatch(s, @"^[\+\-\*\/]+$"))
                 {
-                    Console.WriteLine($"{list[i]} is operator");
-
+                    lastOp = s[0];
+                    Console.WriteLine($"{lastOp} is operator");
                 }
                 else
                 {
-                    Console.WriteLine($"{list[i]} is invalid!");
+                    Console.WriteLine($"Invalid input: {s}");
                 }
                 i++;
             } while (i < list.Count);
